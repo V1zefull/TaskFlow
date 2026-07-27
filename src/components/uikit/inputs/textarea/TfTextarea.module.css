@@ -1,0 +1,75 @@
+.tfTextareaWrapper {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-input-primary-border);
+  border-radius: 8px;
+  width: fit-content;
+  overflow: hidden;
+}
+
+.tfTextareaWrapper:focus-within {
+  border-color: var(--color-input-primary-border-focus);
+}
+
+.tfTextareaWrapper:has(textarea:disabled) {
+  border-color: var(--color-border-subtle);
+  cursor: not-allowed;
+}
+
+.tfTextarea {
+  appearance: none;
+  background: none;
+  resize: none;
+  outline: none;
+  border: none;
+  box-shadow: none;
+  font: inherit;
+  color: inherit;
+  width: 300px;
+  height: 200px;
+  margin: 0;
+  padding: 10px;
+}
+
+.tfTextarea:disabled {
+  color: var(--color-text-tertiary);
+  -webkit-text-fill-color: var(--color-text-tertiary);
+  cursor: not-allowed;
+}
+
+.tfTextareaSm {
+  composes: tfTextarea;
+  width: 200px;
+  height: 100px;
+}
+
+.tfTextareaLg {
+  composes: tfTextarea;
+  width: 400px;
+  height: 300px;
+}
+
+.tfTextareaFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 10px;
+}
+
+.tfTextareaCounter {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+.tfTextareaCounterLimit {
+  color: var(--color-danger-text);
+}
+
+.tfTextareaClearHidden {
+  visibility: hidden;
+}
+
+.tfTextareaClearIcon {
+  filter: brightness(0) invert(1);
+}

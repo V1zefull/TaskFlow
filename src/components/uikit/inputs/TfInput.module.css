@@ -1,0 +1,74 @@
+.tfInputWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  padding: 0 10px;
+  border: 1px solid var(--color-input-primary-border);
+  border-radius: 8px;
+  height: fit-content;
+}
+
+.tfInputWrapperSm {
+  composes: tfInputWrapper;
+  width: 200px;
+}
+
+.tfInputWrapperMd {
+  composes: tfInputWrapper;
+  width: 300px;
+}
+
+.tfInputWrapperLg {
+  composes: tfInputWrapper;
+  width: 400px;
+}
+
+.tfInputWrapper:focus-within{
+  border: 1px solid var(--color-input-primary-border-focus);
+}
+
+.tfInputWrapper:has(input:disabled) {
+  border-color: var(--color-border-subtle);
+  cursor: not-allowed;
+}
+
+.tfInput {
+  appearance: none;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+  height: 2rem;
+  margin: 0;
+  padding: 0;
+  border-radius: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.tfInput:disabled {
+  color: var(--color-text-tertiary);
+  -webkit-text-fill-color: var(--color-text-tertiary);
+  cursor: not-allowed;
+}
+
+.tfInputSm {
+  composes: tfInput;
+  height: 1.875rem;
+}
+
+.tfInputLg {
+  composes: tfInput;
+  height: 3.125rem;
+}
+
+.tfInputIconHidden {
+  visibility: hidden;
+}
+
+.tfInputIcon {
+  filter: brightness(0) invert(1);
+}

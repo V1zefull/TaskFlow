@@ -1,0 +1,130 @@
+.tfButton {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 18px;
+}
+
+.tfButtonSm {
+  composes: tfButton;
+  height: 30px;
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.tfButtonLg {
+  composes: tfButton;
+  height: 50px;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 20px;
+}
+
+.tfButtonPrimary {
+  background: var(--color-button-primary-bg);
+  color: var(--color-button-primary-text);
+}
+
+.tfButtonPrimary:hover {
+  background: var(--color-button-primary-bg-hover);
+}
+
+.tfButtonPrimary:active {
+  background: var(--color-button-primary-bg-active);
+}
+
+.tfButtonSecondary {
+  background: var(--color-button-secondary-bg);
+  color: var(--color-button-secondary-text);
+}
+
+.tfButtonSecondary:hover {
+  background: var(--color-button-secondary-bg-hover);
+}
+
+.tfButtonSecondary:active {
+  background: var(--color-button-secondary-bg-active);
+}
+
+.tfButtonGhost {
+  background: transparent;
+  color: var(--color-button-ghost-text);
+}
+
+.tfButtonGhost:hover {
+  background: var(--color-button-ghost-bg-hover);
+}
+
+.tfButtonGhost:active {
+  background: var(--color-button-ghost-bg-active);
+}
+
+.tfButtonGhost:disabled,
+.tfButtonGhost:disabled:hover,
+.tfButtonGhost:disabled:active {
+  background: transparent;
+}
+
+.tfButtonIconOnlySm {
+  width: 30px;
+  min-width: 30px;
+  padding: 6px;
+}
+
+.tfButtonIconOnlyMd {
+  width: 40px;
+  min-width: 40px;
+  padding: 8px;
+}
+
+.tfButtonIconOnlyLg {
+  width: 50px;
+  min-width: 50px;
+  padding: 10px;
+}
+
+.tfButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.tfButtonLoading {
+  cursor: wait;
+}
+
+.tfButtonContent {
+  visibility: hidden;
+}
+
+.tfButtonSpinner {
+  position: absolute;
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: tfButtonSpin 0.6s linear infinite;
+}
+
+@keyframes tfButtonSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.tfButtonPrimary:disabled,
+.tfButtonPrimary:disabled:hover,
+.tfButtonPrimary:disabled:active {
+  background: var(--color-button-primary-bg);
+}
+
+.tfButtonSecondary:disabled,
+.tfButtonSecondary:disabled:hover,
+.tfButtonSecondary:disabled:active {
+  background: var(--color-button-secondary-bg);
+}
