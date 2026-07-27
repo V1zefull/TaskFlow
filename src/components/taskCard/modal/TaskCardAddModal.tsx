@@ -1,29 +1,73 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import style from "./TaskCardAddModal.module.css";
-
-const SIZE_CLASSES = {
-  sm: style.modalSm,
-  md: style.modal,
-  lg: style.modalLg,
-} as const;
+import TfModal from "@/components/uikit/modal/TfModal";
+import TfInput from "@/components/uikit/inputs/TfInput";
+import TfTextarea from "@/components/uikit/inputs/textarea/TfTextarea";
+import TfButton from "@/components/uikit/buttons/TfButton";
 
 export interface TaskCardAddModalProps {
-  ref?: React.Ref<HTMLElement>;
-  size?: "sm" | "md" | "lg";
-  headerName?: string;
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (data: { title: string; description: string }) => void;
 }
 
 export default function TaskCardAddModal({
-  ref,
-  size = "md",
-  headerName = "Модальное окно",
+  isOpen,
+  onClose,
+  onSubmit,
 }: TaskCardAddModalProps) {
-  const sizeClass = SIZE_CLASSES[size];
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+
+  useEffect(() => {
+    if (isOpen) {
+      setTitle("");
+      setDescription("");
+    }
+  }, [isOpen]);
+
+  const canSubmit = title.trim().length > 0;
+
+  const handleSubmit = () => {
+    if (!canSubmit) return;
+    onSubmit({ title, description });
+    onClose();
+  };
+
   return (
-    <div className="wrapper">
-      <div className="container">
-        <div className="headerName">{headerName}</div>
+    <TfModal isOpen={isOpen} onClose={onClose} headerName="Новая задача">
+      <div className={style.field}>
+        <label className={style.label} htmlFor="taskCardAddModalTitle">
+          Название
+        </label>
+        <TfInput
+          id="taskCardAddModalTitle"
+          placeholder="Введите название задачи"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          clearable
+        />
       </div>
-    </div>
+      <div className={style.field}>
+        <label className={style.label} htmlFor="taskCardAddModalDescription">
+          Описание
+        </label>
+        <TfTextarea
+          id="taskCardAddModalDescription"
+          placeholder="Введите описание задачи"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          clearable
+        />
+      </div>
+      <div className={style.footer}>
+        <TfButton variant="secondary" onClick={onClose}>
+          Отмена
+        </TfButton>
+        <TfButton variant="primary" disabled={!canSubmit} onClick={handleSubmit}>
+          Сохранить
+        </TfButton>
+      </div>
+    </TfModal>
   );
 }

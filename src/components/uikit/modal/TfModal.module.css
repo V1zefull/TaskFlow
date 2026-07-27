@@ -1,0 +1,61 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: color-mix(in srgb, var(--gray-950) 70%, transparent);
+  animation: tfModalOverlayIn 0.15s ease-out;
+}
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  width: 480px;
+  max-width: 100%;
+  max-height: calc(100svh - 40px);
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 12px;
+  box-shadow: var(--shadow-elevation-2);
+  color: var(--color-text-primary);
+  animation: tfModalContentIn 0.15s ease-out;
+}
+
+.modalSm {
+  composes: modal;
+  width: 360px;
+}
+
+.modalLg {
+  composes: modal;
+  width: 640px;
+}
+
+.header {
+  flex-shrink: 0;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border-subtle);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.body {
+  padding: 20px;
+  overflow-y: auto;
+}
+
+@keyframes tfModalOverlayIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes tfModalContentIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
