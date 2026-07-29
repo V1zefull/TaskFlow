@@ -4,11 +4,26 @@ import TfModal from "@/components/uikit/modal/TfModal";
 import TfInput from "@/components/uikit/inputs/TfInput";
 import TfTextarea from "@/components/uikit/inputs/textarea/TfTextarea";
 import TfButton from "@/components/uikit/buttons/TfButton";
+import TfSelect from "@/components/uikit/select/TfSelect";
+import type { TfSelectOption } from "@/components/uikit/select/TfSelect";
+
+export type TaskUrgency = "0" | "1" | "2" | "3";
+
+const URGENCY_OPTIONS: TfSelectOption[] = [
+  { value: "0", label: "Низкая" },
+  { value: "1", label: "Средняя" },
+  { value: "2", label: "Высокая" },
+  { value: "3", label: "Критическая" },
+];
 
 export interface TaskCardAddModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: { title: string; description: string }) => void;
+  onSubmit: (data: {
+    title: string;
+    description: string;
+    urgency: TaskUrgency;
+  }) => void;
 }
 
 export default function TaskCardAddModal({
@@ -18,11 +33,13 @@ export default function TaskCardAddModal({
 }: TaskCardAddModalProps) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [urgency, setUrgency] = useState<TaskUrgency>("1");
 
   useEffect(() => {
     if (isOpen) {
       setTitle("");
       setDescription("");
+      setUrgency("1");
     }
   }, [isOpen]);
 
@@ -30,7 +47,7 @@ export default function TaskCardAddModal({
 
   const handleSubmit = () => {
     if (!canSubmit) return;
-    onSubmit({ title, description });
+    onSubmit({ title, description, urgency });
     onClose();
   };
 
@@ -46,6 +63,7 @@ export default function TaskCardAddModal({
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           clearable
+          fullWidth
         />
       </div>
       <div className={style.field}>
@@ -58,6 +76,19 @@ export default function TaskCardAddModal({
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           clearable
+          fullWidth
+        />
+      </div>
+      <div className={style.field}>
+        <label className={style.label} htmlFor="taskCardAddModalUrgency">
+          Срочность
+        </label>
+        <TfSelect
+          id="taskCardAddModalUrgency"
+          options={URGENCY_OPTIONS}
+          value={urgency}
+          onChange={(value) => setUrgency(value as TaskUrgency)}
+          fullWidth
         />
       </div>
       <div className={style.footer}>
