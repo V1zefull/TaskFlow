@@ -7,6 +7,10 @@
   overflow: hidden;
 }
 
+.tfTextareaWrapperFull {
+  width: 100%;
+}
+
 .tfTextareaWrapper:focus-within {
   border-color: var(--color-input-primary-border-focus);
 }
@@ -47,6 +51,10 @@
   composes: tfTextarea;
   width: 400px;
   height: 300px;
+}
+
+.tfTextareaFull {
+  width: 100%;
 }
 
 .tfTextareaFooter {

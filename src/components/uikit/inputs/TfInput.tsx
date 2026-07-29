@@ -33,6 +33,7 @@ export interface TfInputProps extends Omit<
    * молча игнорируется — это ожидаемое поведение, а не недосмотр.
    */
   clearable?: boolean;
+  fullWidth?: boolean;
 }
 
 function TfInput({
@@ -43,6 +44,7 @@ function TfInput({
   value,
   onChange,
   disabled = false,
+  fullWidth = false,
   ref,
   ...rest
 }: TfInputProps) {
@@ -77,7 +79,11 @@ function TfInput({
   };
 
   return (
-    <div className={wrapperSizeClass}>
+    <div
+      className={[wrapperSizeClass, fullWidth && style.tfInputWrapperFull]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <input
         ref={setInputRef}
         type={resolvedType}

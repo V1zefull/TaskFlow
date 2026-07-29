@@ -1,4 +1,5 @@
 import React, { useEffect, useId, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import style from "./TfSelect.module.css";
 import iconChevron from "@/assets/chevron-down.svg";
 
@@ -33,6 +34,7 @@ export interface TfSelectProps extends Omit<
   size?: "sm" | "md" | "lg";
   placeholder?: string;
   disabled?: boolean;
+  fullWidth?: boolean;
 }
 
 function findEnabledIndex(
@@ -55,10 +57,16 @@ export default function TfSelect({
   size = "md",
   placeholder = "Выберите значение",
   disabled = false,
+  fullWidth = false,
   ...rest
 }: TfSelectProps) {
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
+  const [listPosition, setListPosition] = useState<{
+    top: number;
+    left: number;
+    width: number;
+  } | null>(null);
 
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -194,14 +202,33 @@ export default function TfSelect({
     if (!open) return;
 
     const handlePointerDown = (event: PointerEvent) => {
-      if (!rootRef.current?.contains(event.target as Node)) {
-        setOpen(false);
-        setActiveIndex(-1);
-      }
+      const target = event.target as Node;
+      if (rootRef.current?.contains(target)) return;
+      if (listRef.current?.contains(target)) return;
+      setOpen(false);
+      setActiveIndex(-1);
     };
 
     document.addEventListener("pointerdown", handlePointerDown);
     return () => document.removeEventListener("pointerdown", handlePointerDown);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const updateListPosition = () => {
+      const rect = triggerRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      setListPosition({ top: rect.bottom + 4, left: rect.left, width: rect.width });
+    };
+
+    updateListPosition();
+    window.addEventListener("scroll", updateListPosition, true);
+    window.addEventListener("resize", updateListPosition);
+    return () => {
+      window.removeEventListener("scroll", updateListPosition, true);
+      window.removeEventListener("resize", updateListPosition);
+    };
   }, [open]);
 
   useEffect(() => {
@@ -214,7 +241,13 @@ export default function TfSelect({
   return (
     <div
       ref={rootRef}
-      className={[wrapperSizeClass, className].filter(Boolean).join(" ")}
+      className={[
+        wrapperSizeClass,
+        fullWidth && style.tfSelectWrapperFull,
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
       {...rest}
     >
       <button
@@ -254,42 +287,52 @@ export default function TfSelect({
         />
       </button>
 
-      {open && !disabled && (
-        <ul
-          ref={listRef}
-          id={listboxId}
-          role="listbox"
-          className={style.tfSelectListbox}
-          onMouseDown={(event) => event.preventDefault()}
-        >
-          {options.length === 0 && (
-            <li className={style.tfSelectEmpty}>Вариантов нет</li>
-          )}
-          {options.map((option, index) => (
-            <li
-              key={option.value}
-              id={`${listboxId}-option-${index}`}
-              role="option"
-              aria-selected={option.value === value}
-              aria-disabled={option.disabled || undefined}
-              className={[
-                style.tfSelectOption,
-                index === activeIndex && style.tfSelectOptionActive,
-                option.value === value && style.tfSelectOptionSelected,
-                option.disabled && style.tfSelectOptionDisabled,
-              ]
-                .filter(Boolean)
-                .join(" ")}
-              onMouseEnter={() => {
-                if (!option.disabled) setActiveIndex(index);
-              }}
-              onClick={() => selectIndex(index)}
-            >
-              {option.label}
-            </li>
-          ))}
-        </ul>
-      )}
+      {open &&
+        !disabled &&
+        listPosition &&
+        createPortal(
+          <ul
+            ref={listRef}
+            id={listboxId}
+            role="listbox"
+            className={style.tfSelectListbox}
+            style={{
+              position: "fixed",
+              top: listPosition.top,
+              left: listPosition.left,
+              width: listPosition.width,
+            }}
+            onMouseDown={(event) => event.preventDefault()}
+          >
+            {options.length === 0 && (
+              <li className={style.tfSelectEmpty}>Вариантов нет</li>
+            )}
+            {options.map((option, index) => (
+              <li
+                key={option.value}
+                id={`${listboxId}-option-${index}`}
+                role="option"
+                aria-selected={option.value === value}
+                aria-disabled={option.disabled || undefined}
+                className={[
+                  style.tfSelectOption,
+                  index === activeIndex && style.tfSelectOptionActive,
+                  option.value === value && style.tfSelectOptionSelected,
+                  option.disabled && style.tfSelectOptionDisabled,
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+                onMouseEnter={() => {
+                  if (!option.disabled) setActiveIndex(index);
+                }}
+                onClick={() => selectIndex(index)}
+              >
+                {option.label}
+              </li>
+            ))}
+          </ul>,
+          document.body,
+        )}
     </div>
   );
 }
