@@ -107,7 +107,6 @@ export default function TfTextarea({
             variant="ghost"
             size="sm"
             iconOnly
-            aria-label="Очистить поле"
             disabled={disabled}
             className={!hasValue ? style.tfTextareaClearHidden : undefined}
             onClick={handleClear}

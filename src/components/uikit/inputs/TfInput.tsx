@@ -100,7 +100,6 @@ function TfInput({
           variant="ghost"
           size="sm"
           iconOnly
-          aria-label="Очистить поле"
           disabled={disabled}
           className={!hasValue ? style.tfInputIconHidden : undefined}
           onClick={handleClear}
@@ -120,7 +119,6 @@ function TfInput({
           variant="ghost"
           size="sm"
           iconOnly
-          aria-label={passwordVisible ? "Скрыть пароль" : "Показать пароль"}
           disabled={disabled}
           onClick={() => setPasswordVisible((visible) => !visible)}
         >
