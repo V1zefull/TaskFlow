@@ -1,0 +1,126 @@
+.tfSelectWrapper {
+  position: relative;
+  height: fit-content;
+}
+
+.tfSelectWrapperSm {
+  composes: tfSelectWrapper;
+  width: 200px;
+}
+
+.tfSelectWrapperMd {
+  composes: tfSelectWrapper;
+  width: 300px;
+}
+
+.tfSelectWrapperLg {
+  composes: tfSelectWrapper;
+  width: 400px;
+}
+
+.tfSelect {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  height: calc(2rem + 2px);
+  padding: 0 10px;
+  border: 1px solid var(--color-input-primary-border);
+  border-radius: 8px;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+}
+
+.tfSelectSm {
+  composes: tfSelect;
+  height: calc(1.875rem + 2px);
+}
+
+.tfSelectLg {
+  composes: tfSelect;
+  height: calc(3.125rem + 2px);
+}
+
+.tfSelect:focus-visible,
+.tfSelectOpen {
+  border-color: var(--color-input-primary-border-focus);
+  outline: none;
+}
+
+.tfSelect:disabled {
+  border-color: var(--color-border-subtle);
+  color: var(--color-text-tertiary);
+  cursor: not-allowed;
+}
+
+.tfSelectValue {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tfSelectPlaceholder {
+  composes: tfSelectValue;
+  color: var(--color-input-primary-placeholder);
+}
+
+.tfSelectChevron {
+  flex-shrink: 0;
+  filter: brightness(0) invert(1);
+  transition: transform 0.15s ease;
+}
+
+.tfSelectChevronOpen {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tfSelectChevron {
+    transition: none;
+  }
+}
+
+.tfSelectListbox {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 10;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 4px;
+  border: 1px solid var(--color-border-default);
+  border-radius: 8px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-elevation-1);
+}
+
+.tfSelectOption {
+  padding: 6px 8px;
+  border-radius: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.tfSelectOptionActive {
+  background: var(--color-surface-hover);
+}
+
+.tfSelectOptionSelected {
+  color: var(--color-primary-text);
+}
+
+.tfSelectOptionDisabled {
+  color: var(--color-text-tertiary);
+  cursor: not-allowed;
+}
+
+.tfSelectEmpty {
+  padding: 6px 8px;
+  color: var(--color-text-tertiary);
+}
