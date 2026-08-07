@@ -1,0 +1,131 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  padding: 16px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 10px;
+  background: var(--color-surface-elevated);
+  box-shadow: 0 4px 16px #00000026;
+  transition:
+    border-color 0.15s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.card:hover {
+  border-color: var(--color-border-default);
+  box-shadow: var(--shadow-elevation-1);
+  transform: translateY(-2px);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.title {
+  min-width: 0;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--color-text-primary);
+  overflow-wrap: anywhere;
+}
+
+.urgency {
+  flex-shrink: 0;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.urgency[data-urgency="low"] {
+  color: var(--color-badge-blue-text);
+  background: var(--color-badge-blue-bg);
+}
+
+.urgency[data-urgency="medium"] {
+  color: var(--color-badge-yellow-text);
+  background: var(--color-badge-yellow-bg);
+}
+
+.urgency[data-urgency="high"] {
+  color: var(--color-warning-text);
+  background: var(--color-warning-bg-subtle);
+}
+
+.urgency[data-urgency="critical"] {
+  color: var(--color-danger-text);
+  background: var(--color-danger-bg-subtle);
+}
+
+.description {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+}
+
+.footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.statusControl {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.statusLabel {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+}
+
+.deleteButton {
+  flex-shrink: 0;
+  color: var(--color-danger-text);
+}
+
+.deleteButton:hover {
+  background: var(--color-danger-bg-subtle);
+}
+
+@media (max-width: 400px) {
+  .header,
+  .footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .urgency {
+    align-self: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+
+  .card:hover {
+    transform: none;
+  }
+}
