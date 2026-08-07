@@ -14,18 +14,18 @@ export default function TaskBoard() {
     <div>
       <section className={styles.board} aria-label="Доска задач">
         {COLUMNS.map((column) => {
-          const colunmTasks = tasks.filter(
+          const columnTasks = tasks.filter(
             (task) => task.status === column.status,
           );
           return (
             <section className={styles.column} key={column.status}>
               <div className={styles.columnHeader}>
                 <h2 className={styles.columnTitle}>{column.title}</h2>
-                <span className={styles.taskCount}>{colunmTasks.length}</span>
+                <span className={styles.taskCount}>{columnTasks.length}</span>
               </div>
               <div className={styles.taskList}>
-                {colunmTasks.length > 0 ? (
-                  colunmTasks.map((task) => (
+                {columnTasks.length > 0 ? (
+                  columnTasks.map((task) => (
                     <TaskCard key={task.id} task={task} />
                   ))
                 ) : (
