@@ -99,9 +99,19 @@
   font-size: 12px;
 }
 
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .deleteButton {
   flex-shrink: 0;
   color: var(--color-danger-text);
+}
+
+.editButton {
+  flex-shrink: 0;
 }
 
 .deleteButton:hover {
@@ -117,6 +127,10 @@
 
   .urgency {
     align-self: flex-start;
+  }
+
+  .actions {
+    justify-content: flex-end;
   }
 }
 

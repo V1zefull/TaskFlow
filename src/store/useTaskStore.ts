@@ -1,10 +1,11 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { CreateTaskInput, Task, TaskStatus } from "@/types/task";
+import type { TaskFormValue, Task, TaskStatus } from "@/types/task";
 
 interface TaskStore {
   tasks: Task[];
-  addTask: (input: CreateTaskInput) => void;
+  addTask: (input: TaskFormValue) => void;
+  updateTask: (id: string, input: TaskFormValue) => void;
   updateTaskStatus: (id: string, status: TaskStatus) => void;
   removeTask: (id: string) => void;
 }
@@ -30,6 +31,21 @@ export const useTaskStore = create<TaskStore>()(
 
           return { tasks: [task, ...state.tasks] };
         }),
+
+      updateTask: (id, input) =>
+        set((state) => ({
+          tasks: state.tasks.map((task) =>
+            task.id === id
+              ? {
+                  ...task,
+                  title: input.title.trim(),
+                  description: input.description.trim(),
+                  urgency: input.urgency,
+                  updatedAt: new Date().toISOString(),
+                }
+              : task,
+          ),
+        })),
 
       updateTaskStatus: (id, status) =>
         set((state) => ({

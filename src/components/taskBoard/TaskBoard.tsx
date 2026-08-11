@@ -8,7 +8,11 @@ const COLUMNS = [
   { status: "done", title: "Готово" },
 ] as const;
 
-export default function TaskBoard() {
+interface TaskBoardProps {
+  onEditTask: (taskId: string) => void;
+}
+
+export default function TaskBoard({ onEditTask }: TaskBoardProps) {
   const tasks = useTaskStore((state) => state.tasks);
   return (
     <div>
@@ -26,7 +30,11 @@ export default function TaskBoard() {
               <div className={styles.taskList}>
                 {columnTasks.length > 0 ? (
                   columnTasks.map((task) => (
-                    <TaskCard key={task.id} task={task} />
+                    <TaskCard
+                      key={task.id}
+                      task={task}
+                      onEdit={() => onEditTask(task.id)}
+                    />
                   ))
                 ) : (
                   <p className={styles.empty}>Задач пока нет</p>

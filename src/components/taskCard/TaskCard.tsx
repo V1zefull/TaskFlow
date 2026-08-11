@@ -7,6 +7,7 @@ import styles from "./TaskCard.module.css";
 
 interface TaskCardProps {
   task: Task;
+  onEdit: () => void;
 }
 
 const STATUS_OPTIONS: TfSelectOption[] = [
@@ -26,7 +27,7 @@ function isTaskStatus(value: string): value is TaskStatus {
   return value === "todo" || value === "inProgress" || value === "done";
 }
 
-export default function TaskCard({ task }: TaskCardProps) {
+export default function TaskCard({ task, onEdit }: TaskCardProps) {
   const updateTaskStatus = useTaskStore((state) => state.updateTaskStatus);
   const removeTask = useTaskStore((state) => state.removeTask);
   const handleStatusChange = (value: string) => {
@@ -40,6 +41,7 @@ export default function TaskCard({ task }: TaskCardProps) {
       removeTask(task.id);
     }
   };
+
   return (
     <article className={styles.card}>
       <div className={styles.header}>
@@ -67,14 +69,24 @@ export default function TaskCard({ task }: TaskCardProps) {
           />
         </div>
 
-        <TfButton
-          variant="ghost"
-          size="sm"
-          className={styles.deleteButton}
-          onClick={handleRemove}
-        >
-          Удалить
-        </TfButton>
+        <div className={styles.actions}>
+          <TfButton
+            variant="ghost"
+            size="sm"
+            className={styles.editButton}
+            onClick={onEdit}
+          >
+            Редактировать
+          </TfButton>
+          <TfButton
+            variant="ghost"
+            size="sm"
+            className={styles.deleteButton}
+            onClick={handleRemove}
+          >
+            Удалить
+          </TfButton>
+        </div>
       </div>
     </article>
   );

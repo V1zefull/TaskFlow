@@ -12,4 +12,4 @@ export interface Task {
   updatedAt: string;
 }
 
-export type CreateTaskInput = Pick<Task, "title" | "description" | "urgency">;
+export type TaskFormValue = Pick<Task, "title" | "description" | "urgency">;
