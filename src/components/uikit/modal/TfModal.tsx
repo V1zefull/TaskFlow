@@ -47,8 +47,6 @@ export default function TfModal({
     >
       <div
         className={SIZE_CLASSES[size]}
-        role="dialog"
-        aria-modal="true"
         onClick={(e) => e.stopPropagation()}
       >
         <div className={style.header}>{headerName}</div>

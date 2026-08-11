@@ -15,8 +15,6 @@ const SIZE_CLASSES = {
   lg: style.tfSelectLg,
 } as const;
 
-const TYPEAHEAD_RESET_MS = 500;
-
 export type TfSelectOption = {
   value: string;
   label: string;
@@ -71,7 +69,6 @@ export default function TfSelect({
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
-  const typeahead = useRef({ query: "", at: 0 });
 
   const listboxId = useId();
   const wrapperSizeClass = WRAPPER_SIZE_CLASSES[size];
@@ -111,91 +108,6 @@ export default function TfSelect({
     if (!option || option.disabled) return;
     onChange(option.value);
     closeList();
-  };
-
-  const moveActive = (step: number) => {
-    const from =
-      activeIndex < 0
-        ? step > 0
-          ? 0
-          : options.length - 1
-        : activeIndex + step;
-    const next = findEnabledIndex(options, from, step);
-    if (next >= 0) setActiveIndex(next);
-  };
-
-  const handleTypeahead = (key: string) => {
-    const now = Date.now();
-    const expired = now - typeahead.current.at > TYPEAHEAD_RESET_MS;
-    const query = expired
-      ? key.toLowerCase()
-      : typeahead.current.query + key.toLowerCase();
-    typeahead.current = { query, at: now };
-
-    const match = options.findIndex(
-      (option) =>
-        !option.disabled && option.label.toLowerCase().startsWith(query),
-    );
-    if (match < 0) return;
-
-    if (open) setActiveIndex(match);
-    else onChange(options[match].value);
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (disabled) return;
-
-    switch (event.key) {
-      case "ArrowDown":
-        event.preventDefault();
-        if (open) moveActive(1);
-        else openList();
-        return;
-      case "ArrowUp":
-        event.preventDefault();
-        if (open) moveActive(-1);
-        else openList();
-        return;
-      case "Home": {
-        if (!open) return;
-        event.preventDefault();
-        const first = findEnabledIndex(options, 0, 1);
-        if (first >= 0) setActiveIndex(first);
-        return;
-      }
-      case "End": {
-        if (!open) return;
-        event.preventDefault();
-        const last = findEnabledIndex(options, options.length - 1, -1);
-        if (last >= 0) setActiveIndex(last);
-        return;
-      }
-      case "Enter":
-      case " ":
-        event.preventDefault();
-        if (open) selectIndex(activeIndex);
-        else openList();
-        return;
-      case "Escape":
-        if (!open) return;
-        event.preventDefault();
-        closeList();
-        return;
-      case "Tab":
-        if (open) closeList({ focusTrigger: false });
-        return;
-      default:
-        break;
-    }
-
-    if (
-      event.key.length === 1 &&
-      !event.metaKey &&
-      !event.ctrlKey &&
-      !event.altKey
-    ) {
-      handleTypeahead(event.key);
-    }
   };
 
   useEffect(() => {
@@ -253,21 +165,11 @@ export default function TfSelect({
       <button
         ref={setTriggerRef}
         type="button"
-        role="combobox"
-        aria-haspopup="listbox"
-        aria-expanded={open}
-        aria-controls={open ? listboxId : undefined}
-        aria-activedescendant={
-          open && activeIndex >= 0
-            ? `${listboxId}-option-${activeIndex}`
-            : undefined
-        }
         disabled={disabled}
         className={[sizeClass, open && style.tfSelectOpen]
           .filter(Boolean)
           .join(" ")}
         onClick={() => (open ? closeList() : openList())}
-        onKeyDown={handleKeyDown}
       >
         <span
           className={
@@ -294,7 +196,6 @@ export default function TfSelect({
           <ul
             ref={listRef}
             id={listboxId}
-            role="listbox"
             className={style.tfSelectListbox}
             style={{
               position: "fixed",
@@ -311,9 +212,6 @@ export default function TfSelect({
               <li
                 key={option.value}
                 id={`${listboxId}-option-${index}`}
-                role="option"
-                aria-selected={option.value === value}
-                aria-disabled={option.disabled || undefined}
                 className={[
                   style.tfSelectOption,
                   index === activeIndex && style.tfSelectOptionActive,
