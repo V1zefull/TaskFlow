@@ -19,6 +19,7 @@ export interface TfTextareaProps extends Omit<
   onChange: React.ChangeEventHandler<HTMLTextAreaElement>;
   clearable?: boolean;
   fullWidth?: boolean;
+  invalid?: boolean;
 }
 
 export default function TfTextarea({
@@ -30,6 +31,7 @@ export default function TfTextarea({
   onChange,
   clearable = false,
   fullWidth = false,
+  invalid = false,
   maxLength,
   ...rest
 }: TfTextareaProps) {
@@ -69,15 +71,14 @@ export default function TfTextarea({
       className={[
         style.tfTextareaWrapper,
         fullWidth && style.tfTextareaWrapperFull,
+        invalid && style.tfTextareaWrapperInvalid,
       ]
         .filter(Boolean)
         .join(" ")}
     >
       <textarea
+        {...rest}
         ref={setTextareaRef}
-        placeholder={rest.placeholder}
-        name={rest.name}
-        id={rest.id}
         disabled={disabled}
         value={value}
         onChange={onChange}

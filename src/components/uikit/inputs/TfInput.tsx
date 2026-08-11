@@ -34,6 +34,7 @@ export interface TfInputProps extends Omit<
    */
   clearable?: boolean;
   fullWidth?: boolean;
+  invalid?: boolean;
 }
 
 function TfInput({
@@ -45,6 +46,7 @@ function TfInput({
   onChange,
   disabled = false,
   fullWidth = false,
+  invalid = false,
   ref,
   ...rest
 }: TfInputProps) {
@@ -80,7 +82,11 @@ function TfInput({
 
   return (
     <div
-      className={[wrapperSizeClass, fullWidth && style.tfInputWrapperFull]
+      className={[
+        wrapperSizeClass,
+        fullWidth && style.tfInputWrapperFull,
+        invalid && style.tfInputWrapperInvalid,
+      ]
         .filter(Boolean)
         .join(" ")}
     >

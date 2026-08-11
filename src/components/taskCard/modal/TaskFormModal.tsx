@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { FormEvent } from "react";
 import style from "./TaskFormModal.module.css";
 import TfModal from "@/components/uikit/modal/TfModal";
 import TfInput from "@/components/uikit/inputs/TfInput";
@@ -14,6 +15,27 @@ const URGENCY_OPTIONS: TfSelectOption[] = [
   { value: "high", label: "Высокая" },
   { value: "critical", label: "Критическая" },
 ];
+
+const TITLE_MAX_LENGTH = 100;
+const DESCRIPTION_MAX_LENGTH = 1000;
+
+function validateTitle(title: string): string | undefined {
+  if (title.length === 0) return "Введите название задачи";
+  if (title.trim().length === 0) {
+    return "Название не может состоять только из пробелов";
+  }
+  if (title.length > TITLE_MAX_LENGTH) {
+    return `Название не должно превышать ${TITLE_MAX_LENGTH} символов`;
+  }
+  return undefined;
+}
+
+function validateDescription(description: string): string | undefined {
+  if (description.length > DESCRIPTION_MAX_LENGTH) {
+    return `Описание не должно превышать ${DESCRIPTION_MAX_LENGTH} символов`;
+  }
+  return undefined;
+}
 
 function isTaskUrgency(value: string): value is TaskUrgency {
   return (
@@ -44,11 +66,29 @@ export default function TaskFormModal({
   const [urgency, setUrgency] = useState<TaskUrgency>(
     value?.urgency ?? "medium",
   );
+  const [titleTouched, setTitleTouched] = useState(false);
+  const [descriptionTouched, setDescriptionTouched] = useState(false);
+  const [submitAttempted, setSubmitAttempted] = useState(false);
 
-  const canSubmit = title.trim().length > 0;
+  const titleError = validateTitle(title);
+  const descriptionError = validateDescription(description);
+  const visibleTitleError =
+    titleTouched || submitAttempted ? titleError : undefined;
+  const visibleDescriptionError =
+    descriptionTouched || submitAttempted ? descriptionError : undefined;
+  const canSubmit = !titleError && !descriptionError;
+  const isDirty =
+    title !== (value?.title ?? "") ||
+    description !== (value?.description ?? "") ||
+    urgency !== (value?.urgency ?? "medium");
 
-  const handleClose = () => {
-    onClose();
+  const handleRequestClose = () => {
+    if (
+      !isDirty ||
+      window.confirm("Закрыть форму? Несохранённые изменения будут потеряны.")
+    ) {
+      onClose();
+    }
   };
 
   const handleUrgencyChange = (nextUrgency: string) => {
@@ -57,68 +97,89 @@ export default function TaskFormModal({
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSubmitAttempted(true);
     if (!canSubmit) return;
-    onSubmit({ title, description, urgency });
-    handleClose();
+    onSubmit({
+      title: title.trim(),
+      description: description.trim(),
+      urgency,
+    });
+    onClose();
   };
 
   return (
     <TfModal
       isOpen={isOpen}
-      onClose={handleClose}
+      onClose={handleRequestClose}
       headerName={mode === "create" ? "Новая задача" : "Редактирование задачи"}
     >
-      <div className={style.field}>
-        <label className={style.label} htmlFor="taskFormModalTitle">
-          Название
-        </label>
-        <TfInput
-          id="taskFormModalTitle"
-          placeholder="Введите название задачи"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          clearable
-          fullWidth
-        />
-      </div>
-      <div className={style.field}>
-        <label className={style.label} htmlFor="taskFormModalDescription">
-          Описание
-        </label>
-        <TfTextarea
-          id="taskFormModalDescription"
-          placeholder="Введите описание задачи"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          clearable
-          fullWidth
-        />
-      </div>
-      <div className={style.field}>
-        <label className={style.label} htmlFor="taskFormModalUrgency">
-          Срочность
-        </label>
-        <TfSelect
-          id="taskFormModalUrgency"
-          options={URGENCY_OPTIONS}
-          value={urgency}
-          onChange={handleUrgencyChange}
-          fullWidth
-        />
-      </div>
-      <div className={style.footer}>
-        <TfButton variant="secondary" onClick={handleClose}>
-          Отмена
-        </TfButton>
-        <TfButton
-          variant="primary"
-          disabled={!canSubmit}
-          onClick={handleSubmit}
-        >
-          {mode === "create" ? "Создать" : "Сохранить"}
-        </TfButton>
-      </div>
+      <form className={style.form} noValidate onSubmit={handleSubmit}>
+        <div className={style.field}>
+          <label className={style.label} htmlFor="taskFormModalTitle">
+            Название
+          </label>
+          <TfInput
+            id="taskFormModalTitle"
+            placeholder="Введите название задачи"
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+            onBlur={() => setTitleTouched(true)}
+            maxLength={TITLE_MAX_LENGTH}
+            invalid={Boolean(visibleTitleError)}
+            autoFocus
+            clearable
+            fullWidth
+          />
+          {visibleTitleError && (
+            <p className={style.error} role="alert">
+              {visibleTitleError}
+            </p>
+          )}
+        </div>
+        <div className={style.field}>
+          <label className={style.label} htmlFor="taskFormModalDescription">
+            Описание
+          </label>
+          <TfTextarea
+            id="taskFormModalDescription"
+            placeholder="Введите описание задачи"
+            value={description}
+            onChange={(event) => setDescription(event.target.value)}
+            onBlur={() => setDescriptionTouched(true)}
+            maxLength={DESCRIPTION_MAX_LENGTH}
+            invalid={Boolean(visibleDescriptionError)}
+            clearable
+            fullWidth
+          />
+          {visibleDescriptionError && (
+            <p className={style.error} role="alert">
+              {visibleDescriptionError}
+            </p>
+          )}
+        </div>
+        <div className={style.field}>
+          <label className={style.label} htmlFor="taskFormModalUrgency">
+            Срочность
+          </label>
+          <TfSelect
+            id="taskFormModalUrgency"
+            options={URGENCY_OPTIONS}
+            value={urgency}
+            onChange={handleUrgencyChange}
+            fullWidth
+          />
+        </div>
+        <div className={style.footer}>
+          <TfButton variant="secondary" onClick={handleRequestClose}>
+            Отмена
+          </TfButton>
+          <TfButton variant="primary" type="submit" disabled={!canSubmit}>
+            {mode === "create" ? "Создать" : "Сохранить"}
+          </TfButton>
+        </div>
+      </form>
     </TfModal>
   );
 }

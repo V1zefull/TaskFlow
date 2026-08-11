@@ -1,3 +1,8 @@
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
 .field {
   display: flex;
   flex-direction: column;
@@ -11,6 +16,12 @@
 .label {
   font-size: 14px;
   color: var(--color-text-secondary);
+}
+
+.error {
+  color: var(--color-danger-text);
+  font-size: 13px;
+  line-height: 1.35;
 }
 
 .footer {

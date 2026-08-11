@@ -15,6 +15,11 @@
   border-color: var(--color-input-primary-border-focus);
 }
 
+.tfTextareaWrapperInvalid,
+.tfTextareaWrapperInvalid:focus-within {
+  border-color: var(--color-danger-bg);
+}
+
 .tfTextareaWrapper:has(textarea:disabled) {
   border-color: var(--color-border-subtle);
   cursor: not-allowed;

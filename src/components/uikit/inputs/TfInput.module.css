@@ -28,8 +28,13 @@
   width: 100%;
 }
 
-.tfInputWrapper:focus-within{
+.tfInputWrapper:focus-within {
   border: 1px solid var(--color-input-primary-border-focus);
+}
+
+.tfInputWrapperInvalid,
+.tfInputWrapperInvalid:focus-within {
+  border-color: var(--color-danger-bg);
 }
 
 .tfInputWrapper:has(input:disabled) {
